@@ -14,6 +14,7 @@ export default function App() {
   const apiCall = () => {
     setIsLoading(true);
     setIsError(false);
+    setShowCallbackImage(true);
 
     const randomId = Math.floor(Math.random() * 560000) + 1;
     const url = `https://api.themoviedb.org/3/movie/${randomId}?api_key=dd10bb2fbc12dfb629a0cbaa3f47810c&language=pt-BR`;
