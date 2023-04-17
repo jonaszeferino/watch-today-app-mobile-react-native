@@ -17,7 +17,7 @@ export default function App() {
     setShowCallbackImage(true);
 
     const randomId = Math.floor(Math.random() * 560000) + 1;
-    const url = `https://api.themoviedb.org/3/movie/${randomId}?api_key=dd10bb2fbc12dfb629a0cbaa3f47810c&language=pt-BR`;
+    const url = `https://api.themoviedb.org/3/movie/${randomId.toString()}?api_key=dd10bb2fbc12dfb629a0cbaa3f47810c&language=pt-BR`;
 
     fetch(url)
       .then((response) => response.json())
@@ -60,7 +60,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header
-        backgroundColor="#3D6DCC"
+        backgroundColor="#4d33ef"
         leftComponent={{ icon: "menu", color: "#fff" }}
         centerComponent={{
           text: "What to watch today?",
