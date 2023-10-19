@@ -1,4 +1,4 @@
-# watchTodayAppMobile
+# Watch Today App Mobile
 React-Native Project
 
 My First React-Native Project
