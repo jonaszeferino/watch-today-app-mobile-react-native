@@ -1,9 +1,17 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { Image, Button, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity
+} from "react-native";
 import { Header } from "react-native-elements";
 import { useEffect, useState } from "react";
-import callbackImage from "./assets/callback.png";
+import callbackImage from "./assets/callback_gray.png";
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -33,7 +41,8 @@ export default function App() {
           ratingCount: result.vote_count || null,
           popularity: result.popularity || null,
           gender:
-            (result.genres && result.genres.map((genre) => genre.name)) || null,
+            (result.genres && result.genres.map((genre) => genre.name)) || [],
+
           languages:
             (result.spoken_languages && result.spoken_languages[0].name) ||
             null,
@@ -68,66 +77,63 @@ export default function App() {
         }}
         rightComponent={{ icon: "home", color: "#fff" }}
       />
-      {(isError || (!isLoading && !data)) && (
-        <View style={styles.callbackContainer}>
-          <Image source={callbackImage} style={styles.callbackImage} />
-          {isError && (
-            <Text style={styles.errorText}>
-              Ocorreu um erro ao carregar os dados
-            </Text>
-          )}
-        </View>
-      )}
-      {data && (
-        <>
-          <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.header}>Title </Text>
-              <Text>{data.originalTitle}</Text>
+
+      <ScrollView style={styles.contentContainer}>
+        {data ? (
+          <>
+            {(isError || (!isLoading && !data)) && (
+              <View style={styles.callbackContainer}>
+                <Image source={callbackImage} style={styles.callbackImage} />
+                {isError && (
+                  <Text style={styles.errorText}>
+                    Ocorreu um erro ao carregar os dados
+                  </Text>
+                )}
+              </View>
+            )}
+          </>
+        ) : (
+          <Text>Clique no Botão Abaixo para ter uma sugestão de filme</Text>
+        )}
+
+        {data && !isError &&  (
+          <>
+            <View style={styles.table}>
+              <View style={styles.row}>
+                <Text style={styles.header}>Título</Text>
+                <Text>{data.originalTitle}</Text>
+              </View>
             </View>
-          </View>
-          <Image
-            style={{ height: 504, width: 336 }}
-            source={{ uri: imageUrl }}
-          />
-          {data.popularity && (
-            <View style={styles.row}>
-              <Text style={styles.header}>Popularity </Text>
-              <Text>{data.popularity}</Text>
-            </View>
-          )}
-          {data.ratingCount && (
-            <View style={styles.row}>
-              <Text style={styles.header}>Rating </Text>
-              <Text>{data.ratingCount}</Text>
-            </View>
-          )}
-          {data.budget && (
-            <View style={styles.row}>
-              <Text style={styles.header}>Budget </Text>
-              <Text>{data.budget}</Text>
-            </View>
-          )}
-        </>
-      )}
-      <StatusBar style="auto" />
-      {data || isError ? (
-        <Button
-          title="Novo Filme"
-          size="lg"
-          colorScheme="purple"
-          mt="24px"
-          onPress={apiCall}
-        />
-      ) : (
-        <Button
-          title="Verificar"
-          size="lg"
-          colorScheme="purple"
-          mt="24px"
-          onPress={apiCall}
-        />
-      )}
+            <Image
+              style={{ height: 504, width: 336 }}
+              source={{ uri: imageUrl }}
+            />
+            {data.popularity && (
+              <View style={styles.row}>
+                <Text style={styles.header}>Nota </Text>
+                <Text>{data.popularity}</Text>
+              </View>
+            )}
+    
+          </>
+        )}
+        <StatusBar style="auto" />
+        {data || isError ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={apiCall}
+          >
+            <Text style={styles.buttonText}>Novo Filme</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={apiCall}
+          >
+            <Text style={styles.buttonText}>Verificar</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -138,6 +144,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: 50,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   table: {
     marginVertical: 20,
@@ -146,12 +156,37 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 5,
+    paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
   header: {
+    fontWeight: "bold",
+  },
+  callbackContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  callbackImage: {
+    width: 336,
+    height: 504,
+  },
+  errorText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "red",
+  },
+  button: {
+    backgroundColor: "blue",
+    padding: 10, 
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 24,
+  },
+  buttonText: {
+    color: "white",
     fontWeight: "bold",
   },
 });
