@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@gluestack-ui/themed": "^1.0.8",
     "@ui-kitten/components": "^5.3.0",
     "expo": "^49.0.16",
     "expo-status-bar": "~1.6.0",

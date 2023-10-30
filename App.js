@@ -1,5 +1,7 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
+import { Button as ButtonTest, ButtonText, ButtonIcon } from "@gluestack-ui/themed";
+
 import {
   Image,
   Button,
@@ -7,17 +9,20 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { useEffect, useState } from "react";
 import callbackImage from "./assets/callback_gray.png";
+import MovieRating from "./components/rating";
 
 export default function App() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [showCallbackImage, setShowCallbackImage] = useState(true);
+
+  const [showRatingModal, setShowRatingModal] = useState(false);
 
   const apiCall = () => {
     setIsLoading(true);
@@ -66,19 +71,23 @@ export default function App() {
     ? `https://image.tmdb.org/t/p/original${data.image}`
     : callbackImage;
 
+    let AddIcon
+
   return (
     <View style={styles.container}>
       <Header
         backgroundColor="#4d33ef"
         leftComponent={{ icon: "menu", color: "#fff" }}
         centerComponent={{
-          text: "What to watch today?",
+          text: "What To Watch Today?",
           style: { color: "#fff" },
         }}
         rightComponent={{ icon: "home", color: "#fff" }}
       />
 
       <ScrollView style={styles.contentContainer}>
+
+
         {data ? (
           <>
             {(isError || (!isLoading && !data)) && (
@@ -96,7 +105,7 @@ export default function App() {
           <Text>Clique no Botão Abaixo para ter uma sugestão de filme</Text>
         )}
 
-        {data && !isError &&  (
+        {data && !isError && (
           <>
             <View style={styles.table}>
               <View style={styles.row}>
@@ -114,26 +123,32 @@ export default function App() {
                 <Text>{data.popularity}</Text>
               </View>
             )}
-    
           </>
         )}
         <StatusBar style="auto" />
         {data || isError ? (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={apiCall}
-          >
+          <TouchableOpacity style={styles.button} onPress={apiCall}>
             <Text style={styles.buttonText}>Novo Filme</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={apiCall}
-          >
+          <TouchableOpacity style={styles.button} onPress={apiCall}>
             <Text style={styles.buttonText}>Verificar</Text>
           </TouchableOpacity>
         )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setShowRatingModal(true)}
+        >
+          <Text style={styles.buttonText}>Avaliar</Text>
+        </TouchableOpacity>
       </ScrollView>
+      <StatusBar style="auto" />
+      {showRatingModal && (
+        <MovieRating
+          movieData={data}
+          onClose={() => setShowRatingModal(false)}
+        />
+      )}
     </View>
   );
 }
@@ -180,7 +195,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "blue",
-    padding: 10, 
+    padding: 10,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 24,
